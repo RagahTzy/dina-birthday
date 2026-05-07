@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { getStoredName } from "@/utils/store";
+import { clearStoredName, getStoredName, isAuthorizedName } from "@/utils/store";
 import FloatingHearts from "@/components/FloatingHearts";
 import Sparkles from "@/components/Sparkles";
 
@@ -31,7 +31,8 @@ export default function QuestionPage() {
 
   useEffect(() => {
     const stored = getStoredName();
-    if (!stored) {
+    if (!stored || !isAuthorizedName(stored)) {
+      clearStoredName();
       router.push("/login");
       return;
     }
@@ -138,7 +139,7 @@ export default function QuestionPage() {
             className="text-3xl md:text-5xl font-bold text-gradient-rose"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
-            kamu sayang aku gak? 🥺
+            kamu sayang aku gak?
           </h2>
         </motion.div>
 
@@ -225,7 +226,7 @@ export default function QuestionPage() {
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 text-pink-500 font-medium text-base"
+              className="mt-6 text-sm bg-black/70 text-white px-4 py-2 rounded-2xl inline-block shadow-lg"
             >
               Itu bukan pilihan yang valid 💕
             </motion.p>
@@ -237,7 +238,7 @@ export default function QuestionPage() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mt-6 text-pink-400 text-sm"
+            className="mt-6 text-sm bg-black/70 text-white px-4 py-2 rounded-2xl inline-block shadow-lg"
           >
             {noClickCount === 1 && "Heh? 🤨"}
             {noClickCount === 2 && "Masih mau coba? 😅"}

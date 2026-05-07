@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { setStoredName } from "@/utils/store";
+import { getAuthorizedDisplayName, isAuthorizedName, setStoredName } from "@/utils/store";
 import FloatingHearts from "@/components/FloatingHearts";
 import Sparkles from "@/components/Sparkles";
 
@@ -14,15 +14,21 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    if (!name.trim()) {
+    const trimmedName = name.trim();
+    if (!trimmedName) {
       setError("Isi dulu dongg 😚");
-      // Shake animation trigger
       setTimeout(() => setError(""), 3000);
       return;
     }
+
+    if (!isAuthorizedName(trimmedName)) {
+      setError("Hanya Dina yang bisa masuk yaa. Coba lagi dengan nama yang benar.");
+      setTimeout(() => setError(""), 4000);
+      return;
+    }
+
     setIsLoading(true);
-    setStoredName(name.trim());
-    // Small delay for loading feel
+    setStoredName(getAuthorizedDisplayName(trimmedName));
     await new Promise((r) => setTimeout(r, 600));
     router.push("/question");
   };
@@ -177,7 +183,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-center mt-4 text-pink-400 text-sm font-medium"
+          className="text-center mt-4 text-sm bg-black/70 text-white px-4 py-2 rounded-2xl shadow-lg"
         >
           ✨ ada sesuatu yang spesial untukmu ✨
         </motion.p>

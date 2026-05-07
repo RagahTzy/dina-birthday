@@ -5,15 +5,15 @@ import { motion } from "framer-motion";
 // Photo placeholder grid - replace src with actual photo paths
 // Put your photos in /public/photos/ folder: photo1.jpg, photo2.jpg, etc.
 const PHOTOS = [
-  "/photos/photo1.jpg",
-  "/photos/photo2.jpg",
-  "/photos/photo3.jpg",
-  "/photos/photo4.jpg",
-  "/photos/photo5.jpg",
-  "/photos/photo6.jpg",
-  "/photos/photo7.jpg",
-  "/photos/photo8.jpg",
-  "/photos/photo9.jpg",
+  "/photos/photo1.webp",
+  "/photos/photo2.webp",
+  "/photos/photo3.webp",
+  "/photos/photo4.webp",
+  "/photos/photo5.webp",
+  "/photos/photo6.webp",
+  "/photos/photo7.webp",
+  "/photos/photo8.webp",
+  "/photos/photo9.webp",
 ];
 
 export default function PhotoBackground() {

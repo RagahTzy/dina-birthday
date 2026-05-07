@@ -12,6 +12,17 @@ export default function MusicPlayer() {
   useEffect(() => {
     // Show hint for 3 seconds
     const timer = setTimeout(() => setShowHint(false), 4000);
+
+    // Try to autoplay when the component mounts
+    if (audioRef.current) {
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {
+          // Autoplay may be blocked by browser policies; user can still tap button.
+        });
+    }
+
     return () => clearTimeout(timer);
   }, []);
 

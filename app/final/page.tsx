@@ -3,22 +3,23 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { clearStoredName, getStoredName, isAuthorizedName } from "@/utils/store";
+import { getStoredName } from "@/utils/store";
 import HeartCard from "@/components/HeartCard";
 import HugModal from "@/components/HugModal";
 import PhotoBackground from "@/components/PhotoBackground";
 import MusicPlayer from "@/components/MusicPlayer";
 import Confetti from "@/components/Confetti";
+import Lenis from "lenis";
 
 const CARDS = [
-  { message: "Pertama kali ketemu kamu, aku tau kamu beda dari yang lain", emoji: "❤️", side: "left" as const, backgroundImage: "/photos/card1.jpg" },
-  { message: "Makasih udah selalu sabar sama aku, bahkan di saat aku nyebelin", emoji: "💗", side: "right" as const, backgroundImage: "/photos/card2.jpg" },
-  { message: "Aku bersyukur banget punya kamu di sisi aku", emoji: "✨", side: "left" as const, backgroundImage: "/photos/card3.jpg" },
-  { message: "Kamu rumah terbaik yang pernah aku temukan", emoji: "🏡", side: "right" as const, backgroundImage: "/photos/card4.jpg" },
-  { message: "Semoga kita lama banget yaa, selamanya kalau bisa", emoji: "💞", side: "left" as const, backgroundImage: "/photos/card5.jpg" },
-  { message: "Senyum kamu itu obat paling ampuh buat aku", emoji: "🌸", side: "right" as const, backgroundImage: "/photos/card6.jpg" },
-  { message: "Kamu itu bukan cuma pacar, kamu sahabat terbaik aku juga", emoji: "🫶", side: "left" as const, backgroundImage: "/photos/card7.jpg" },
-  { message: "Setiap hari sama kamu selalu jadi hari terbaik aku", emoji: "💫", side: "right" as const, backgroundImage: "/photos/photo8.jpg" },
+  { message: "Pertama kali ketemu kamu, aku tau kamu beda dari yang lain", emoji: "❤️", side: "left" as const, backgroundImage: "/photos/card1.webp" },
+  { message: "Makasih udah selalu sabar sama aku, bahkan di saat aku nyebelin", emoji: "💗", side: "right" as const, backgroundImage: "/photos/card2.webp" },
+  { message: "Aku bersyukur banget punya kamu di sisi aku", emoji: "✨", side: "left" as const, backgroundImage: "/photos/card3.webp" },
+  { message: "Kamu rumah terbaik yang pernah aku temukan", emoji: "🏡", side: "right" as const, backgroundImage: "/photos/card4.webp" },
+  { message: "Semoga kita lama banget yaa, selamanya kalau bisa", emoji: "💞", side: "left" as const, backgroundImage: "/photos/card5.webp" },
+  { message: "Senyum kamu itu obat paling ampuh buat aku", emoji: "🌸", side: "right" as const, backgroundImage: "/photos/card6.webp" },
+  { message: "Kamu itu bukan cuma pacar, kamu sahabat terbaik aku juga", emoji: "🫶", side: "left" as const, backgroundImage: "/photos/card7.webp" },
+  { message: "Setiap hari sama kamu selalu jadi hari terbaik aku", emoji: "💫", side: "right" as const, backgroundImage: "/photos/photo8.webp" },
 ];
 
 const BIRTHDAY_MESSAGE = `Happy Birthday\nSayangku 🎂\n\nSemoga semua impian\nkamu tercapai.\nSelalu sehat, selalu bahagia.\nDan semoga aku selalu\njadi bagian dari\nbahagia kamu ❤️`;
@@ -47,11 +48,7 @@ export default function FinalPage() {
 
   useEffect(() => {
     const stored = getStoredName();
-    if (!stored || !isAuthorizedName(stored)) {
-      clearStoredName();
-      router.push("/login");
-      return;
-    }
+    if (!stored) { router.push("/login"); return; }
     setName(stored);
     setHeartsLaunched(
       Array.from({ length: 20 }, (_, i) => ({
@@ -74,6 +71,24 @@ export default function FinalPage() {
     );
     observer.observe(footer);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
   }, []);
 
   // Pair cards into rows of 2
@@ -273,7 +288,7 @@ export default function FinalPage() {
             message={BIRTHDAY_MESSAGE}
             index={CARDS.length}
             isSpecial
-            backgroundImage="/photos/photo9.jpg"
+            backgroundImage="/photos/photo9.webp"
           />
         </section>
 
